@@ -8,7 +8,7 @@ import java.util.Stack;
 public class AVL {
     Nodo raiz;
     int fila;
-    public AVL(){
+    AVL(){
         raiz=null;
     }
     
@@ -20,8 +20,8 @@ public class AVL {
     }
     
     void rIzquierda(Nodo p,Nodo q){
-        q.bal=0;
         p.bal=0;
+        q.bal=0;
         p.der=q.izq;
         q.izq=p;
     }
@@ -34,7 +34,7 @@ public class AVL {
         r.izq=q;
         p.izq=r.der;
         r.der=p;
-        switch(r.bal){
+        switch(r.bal){  
             case -1:q.bal=1;
                 p.bal=0;
                 break;
@@ -55,7 +55,7 @@ public class AVL {
         Nodo r;
         
         r=q.izq;
-        q.izq=r.der;
+        q.izq = r.der;
         r.der=q;
         p.der=r.izq;
         r.izq=p;
@@ -64,11 +64,11 @@ public class AVL {
                 q.bal=0;
                 p.bal=1;
                 break;
-            case 0:
+            case 1:
                 q.bal=-1;
                 p.bal=0;
                 break;
-            case 1:
+            case 0:
                 q.bal=p.bal=0;
                 break;
         }
@@ -76,14 +76,15 @@ public class AVL {
         return r;      
     }
     
-    int insAVL(int n){
+    int insAVL(int n,int c){
         Nodo nuevo,p,q,s,pivote,pp;
         int llave,altura;
         
         nuevo=new Nodo(n);
         if(raiz==null){
+            c++;
             raiz=nuevo;
-            return (1);
+            return c;
         }
         
         pp=q=null;
@@ -92,27 +93,40 @@ public class AVL {
         
         while(p != null){
             if(p.bal != 0){
+                c++;
                 pp = q;
                 pivote = p;
             }
             if(llave == p.info){
-                return (2);
+                c++;
+                return c;
             }else{
+                c++;
                 q=p;
-                if(llave < p.info)
+                if(llave < p.info){
+                    c++;
                     p=p.izq;
-                else p=p.der;   
+                }else {
+                    c++;
+                    p=p.der;
+                }   
             }
         }
         
-        if(llave < q.info)
+        if(llave < q.info){
+            c++;
             q.izq=nuevo;
-        else q.der=nuevo;
+        }else {
+            c++;
+            q.der=nuevo;
+        }
         if(llave < pivote.info){
+            c++;
             s=pivote.izq;
             altura=1;
             
         }else{
+            c++;
             s=pivote.der;
             altura=-1;
         }
@@ -120,36 +134,56 @@ public class AVL {
         p=s;
         while(p != nuevo){
             if(llave < p.info){
+                c++;
                 p.bal=1;
                 p=p.izq;
             }else{
+                c++;
                 p.bal=-1;
                 p=p.der;   
             }    
         }
         
         if(pivote.bal==0){
+            c++;
             pivote.bal=altura;
             
-        }else if(pivote.bal + altura == 0)
+        }else if(pivote.bal + altura == 0){
+            c++;
             pivote.bal=0;
-        else{
+        }else{
+            c++;
             if(altura==1){
-                if(s.bal==1)
+                c++;
+                if(s.bal==1){
+                    c++;
                     rDerecha(pivote,s);
-                else s=drDerecha(pivote,s);
+                }else{
+                    c++;
+                    s=drDerecha(pivote,s);
+                }
             }else{
+                c++;
                 if(s.bal==-1){
+                    c++;
                     rIzquierda(pivote,s);
-                }else s=drIzquierda(pivote,s);
+                }else{
+                    c++;
+                    s=drIzquierda(pivote,s);
+                }
             }
-            if(pp==null)
+            if(pp==null){
+                c++;
                 raiz=s;
-            else if(pp.izq==pivote)
+            }else if(pp.izq==pivote){
+                c++;
                 pp.izq=s;
-            else pp.der=s;
+            }else{
+                c++;
+                pp.der=s;
+            }
         }
-        return 1;
+        return c;
     }
     
     Nodo raizArbol(){
@@ -248,7 +282,7 @@ public class AVL {
         return t;
     }
     
-    int retirarAVL(int n){
+    int retirarAVL(int n,int c){
         Stack pila=new Stack();
         Nodo p,q,t,r;
         int llave, accion;
@@ -258,36 +292,52 @@ public class AVL {
         boolean encontro=false;
         
         if(raiz==null){
-            return (1);
+            c++;
+            return c;
         }
         terminar[0]=0;
         p=raiz;
         while(!encontro && p!=null){
             pila.push(p);
-            if(n<p.info)
+            if(n<p.info){
+                c++;
                 p=p.izq;
-            else if(n>p.info)
+            }else if(n>p.info){
+                c++;
                 p=p.der;
-            else encontro=true;
+            }else {
+                c++;
+                encontro=true;
+            }
             
         }
         if(!encontro){
-            return(2);
+            c++;
+            return c;
         }    
         t=null;
         p=(Nodo)pila.pop();
         llave=p.info;
-        if(p.izq==null && p.der==null)
+        if(p.izq==null && p.der==null){
+            c++;
             accion=0;
-        else if(p.der==null)
+        }else if(p.der==null){
             accion=1;
-        else if(p.izq==null)
+            c++;
+        }else if(p.izq==null){
+            c++;
             accion=2;
-        else accion=3;
+        }else {
+            c++;
+            accion=3;
+        }
         if(accion==0 || accion==1 || accion==2){
+            c++;
             if(!pila.empty()){
+                c++;
                 q=(Nodo)pila.pop();
-                if(llave<q.info)
+                if(llave<q.info){
+                    c++;
                     switch(accion){
                         case 0:
                         case 1:
@@ -299,7 +349,8 @@ public class AVL {
                             t=bal_der(q,terminar);
                             break;                            
                     }
-                else{
+                }else{
+                    c++;
                     switch(accion){
                         case 0:
                         case 2:
@@ -314,6 +365,7 @@ public class AVL {
                 }
                             
             }else{
+                c++;
                 switch(accion){
                     case 0:
                         raiz=null;
@@ -342,11 +394,13 @@ public class AVL {
             }
             llave=r.info=p.info;
             if(q!=null){
+                c++;
                 q.izq=p.der;
                 t=bal_der(q,terminar);
                 
             }
             else{
+                c++;
                 r.der=p.der;
                 t=bal_izq(r,terminar);
                 
@@ -358,14 +412,18 @@ public class AVL {
         while(!pila.empty() && terminar[0]==0){
             q=(Nodo)pila.pop();
             if(llave<q.info){
+                c++;
                 if(t!=null){
+                    c++;
                     q.izq=t;
                     t=null;
                 }
                 t=bal_der(q,terminar);
             }
             else{
+                c++;
                 if(t!=null){
+                    c++;
                     q.der=t;
                     t=null;
                 }
@@ -374,18 +432,25 @@ public class AVL {
         }
         
         if(t!=null){
+            c++;
             if(pila.empty()==true){
+                c++;
                 raiz=t;
                 
             }
             else{
+                c++;
                 q=(Nodo)pila.pop();
-                if(llave==q.info)
+                if(llave==q.info){
+                    c++;
                     q.izq=t;
-                else q.der=t;
+                }else{
+                    c++;
+                    q.der=t;
+                }
                 
             }
         }
-        return 0;
+        return c;
     }
 }
